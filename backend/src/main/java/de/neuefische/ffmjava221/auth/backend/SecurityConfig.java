@@ -1,5 +1,6 @@
 package de.neuefische.ffmjava221.auth.backend;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -11,6 +12,9 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Value("${app.user.daniel.password}")
+    String danielPassword;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -33,7 +37,7 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager(
                 User.builder()
                         .username("daniel")
-                        .password("$2a$10$kKMQyRT/xeBaCwpTP/MH8e2GsB/eUq.NAkfqiC8qhajraNYA/Thbu")
+                        .password(danielPassword)
                         .roles("BASIC")
                         .build()
         );
