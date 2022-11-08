@@ -24,7 +24,7 @@ public class SecurityConfig {
                 .csrf().disable()
                 .httpBasic().and()
                 .authorizeRequests()
-                .antMatchers("/api/excavators", "/api/app-users/login").authenticated()
+                .antMatchers("/api/excavators", "/api/app-users/login", "/api/app-users/logout").authenticated()
                 .anyRequest().denyAll()
                 .and().build();
     }
