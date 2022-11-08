@@ -5,9 +5,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @EnableWebSecurity
@@ -33,13 +35,44 @@ public class SecurityConfig {
     }
 
     @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-        return new InMemoryUserDetailsManager(
-                User.builder()
-                        .username("daniel")
-                        .password(danielPassword)
-                        .roles("BASIC")
-                        .build()
-        );
+    public UserDetailsManager userDetailsService() {
+        return new UserDetailsManager() {
+            @Override
+            public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+                if ("daniel".equals(username)) {
+                    return User.builder()
+                            .username("daniel")
+                            .password(danielPassword)
+                            .roles("BASIC")
+                            .build();
+                }
+                throw new UsernameNotFoundException("Username not found");
+            }
+
+            @Override
+            public void createUser(UserDetails user) {
+                throw new UnsupportedOperationException("You cannot use this custom UserDetailsManager for this action.");
+            }
+
+            @Override
+            public void updateUser(UserDetails user) {
+                throw new UnsupportedOperationException("You cannot use this custom UserDetailsManager for this action.");
+            }
+
+            @Override
+            public void deleteUser(String username) {
+                throw new UnsupportedOperationException("You cannot use this custom UserDetailsManager for this action.");
+            }
+
+            @Override
+            public void changePassword(String oldPassword, String newPassword) {
+                throw new UnsupportedOperationException("You cannot use this custom UserDetailsManager for this action.");
+            }
+
+            @Override
+            public boolean userExists(String username) {
+                throw new UnsupportedOperationException("You cannot use this custom UserDetailsManager for this action.");
+            }
+        };
     }
 }
