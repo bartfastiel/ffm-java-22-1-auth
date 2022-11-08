@@ -1,6 +1,6 @@
 package de.neuefische.ffmjava221.auth.backend;
 
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,10 +13,10 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Value("${app.user.daniel.password}")
-    String danielPassword;
+    private final UserService userService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -39,14 +39,16 @@ public class SecurityConfig {
         return new UserDetailsManager() {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                if ("daniel".equals(username)) {
-                    return User.builder()
-                            .username("daniel")
-                            .password(danielPassword)
-                            .roles("BASIC")
-                            .build();
+                AppUser userByName = userService.findByUsername(username);
+                if (userByName == null) {
+                    throw new UsernameNotFoundException("Username not found");
                 }
-                throw new UsernameNotFoundException("Username not found");
+                return User.builder()
+                        .username(username)
+                        .password(userByName.passwordBcrypt())
+                        .roles("BASIC")
+                        .build()
+                        ;
             }
 
             @Override
