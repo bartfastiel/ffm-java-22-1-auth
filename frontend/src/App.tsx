@@ -22,7 +22,7 @@ function App() {
     if (username === 'anonymousUser') {
         return <LoginPage onLogin={fetchUsername}></LoginPage>
     }
-    return <SecuredPage></SecuredPage>
+    return <SecuredPage username={username}></SecuredPage>
 }
 
 export default App;
