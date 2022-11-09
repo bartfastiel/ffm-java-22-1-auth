@@ -3,9 +3,7 @@ package de.neuefische.ffmjava221.auth.backend;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -13,6 +11,9 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/api/app-users")
 @RequiredArgsConstructor
 public class AppUserController {
+
+    private final UserService userService;
+
     @GetMapping("/login")
     public String login() {
         return "OK";
@@ -31,5 +32,10 @@ public class AppUserController {
             .getPrincipal();
 
         return loggedInUser.getUsername();
+    }
+
+    @PostMapping
+    public void createAppUser(@RequestBody NewAppUser newAppUser) {
+        userService.save(newAppUser);
     }
 }

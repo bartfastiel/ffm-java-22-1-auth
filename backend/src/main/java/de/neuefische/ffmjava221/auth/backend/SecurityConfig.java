@@ -2,6 +2,7 @@ package de.neuefische.ffmjava221.auth.backend;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -15,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+    public static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     private final UserService userService;
 
@@ -24,6 +26,10 @@ public class SecurityConfig {
                 .csrf().disable()
                 .httpBasic().and()
                 .authorizeRequests()
+                .antMatchers(
+                    HttpMethod.POST,
+                    "/api/app-users"
+                ).permitAll()
                 .antMatchers(
                     "/api/excavators",
                     "/api/app-users/login",
@@ -36,7 +42,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
+        return passwordEncoder;
     }
 
     @Bean
