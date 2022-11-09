@@ -1,10 +1,20 @@
 import axios from "axios";
 import {useState} from "react";
 
-export default function LoginPage() {
+type Props = {
+    onLogin: () => void,
+}
+export default function LoginPage(props: Props) {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+
+    const register = () => {
+        axios.post("/api/app-users", {
+            username,
+            password
+        })
+    }
 
     const login = () => {
         axios.get("/api/app-users/login", {
@@ -13,6 +23,7 @@ export default function LoginPage() {
                 password
             }
         })
+            .then(props.onLogin)
     }
 
     return <>
@@ -23,6 +34,7 @@ export default function LoginPage() {
         <label htmlFor="password">Passwort</label>
         <input type="password" id="password" onChange={event => setPassword(event.target.value)}/>
         <br/>
+        <button onClick={() => register()}>Registrieren</button>
         <button onClick={() => login()}>Anmelden</button>
     </>
 }

@@ -20,7 +20,7 @@ function App() {
         return <>Bitte haben Sie einen Augenblick Geduld...</>
     }
     if (username === 'anonymousUser') {
-        return <LoginPage></LoginPage>
+        return <LoginPage onLogin={fetchUsername}></LoginPage>
     }
     return <SecuredPage></SecuredPage>
 }
