@@ -2,7 +2,6 @@ package de.neuefische.ffmjava221.auth.backend;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -26,12 +25,10 @@ public class AppUserController {
 
     @GetMapping("/me")
     public String me() {
-        User loggedInUser = (User)SecurityContextHolder
-            .getContext()
-            .getAuthentication()
-            .getPrincipal();
-
-        return loggedInUser.getUsername();
+        return SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
     }
 
     @PostMapping

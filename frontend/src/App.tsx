@@ -1,26 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useEffect, useState} from 'react';
 import './App.css';
+import LoginPage from "./LoginPage";
+import SecuredPage from "./SecuredPage";
+import axios from "axios";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+    const [username, setUsername] = useState<string>();
+
+    const fetchUsername = () => {
+        axios.get('/api/app-users/me')
+            .then(response => response.data)
+            .then(setUsername)
+    }
+
+    useEffect(fetchUsername, [])
+
+    if (username === undefined) {
+        return <>Bitte haben Sie einen Augenblick Geduld...</>
+    }
+    if (username === 'anonymousUser') {
+        return <LoginPage></LoginPage>
+    }
+    return <SecuredPage></SecuredPage>
 }
 
 export default App;

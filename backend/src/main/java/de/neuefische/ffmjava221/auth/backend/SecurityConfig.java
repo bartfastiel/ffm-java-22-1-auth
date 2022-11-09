@@ -31,10 +31,13 @@ public class SecurityConfig {
                     "/api/app-users"
                 ).permitAll()
                 .antMatchers(
+                    HttpMethod.GET,
+                        "/api/app-users/me"
+                ).permitAll()
+                .antMatchers(
                     "/api/excavators",
                     "/api/app-users/login",
-                    "/api/app-users/logout",
-                    "/api/app-users/me"
+                    "/api/app-users/logout"
                 ).authenticated()
                 .anyRequest().denyAll()
                 .and().build();
