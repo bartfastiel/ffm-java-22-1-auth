@@ -14,7 +14,8 @@ import javax.servlet.http.HttpSession;
 @RequiredArgsConstructor
 public class AppUserController {
     @GetMapping("/login")
-    public void login() {
+    public String login() {
+        return "OK";
     }
 
     @GetMapping("/logout")
